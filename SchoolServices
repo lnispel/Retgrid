@@ -1,0 +1,488 @@
+using Sabio.Data;
+using Sabio.Web.Controllers.Api;
+using Sabio.Web.Models.Requests;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity.Spatial;
+using System.Data.SqlClient;
+using System;
+
+namespace Sabio.Web.Services
+{
+    public class SchoolService : BaseService, ISchoolService
+    {
+        public int InsertSchool(SchoolAddRequest model)
+        {
+            int Id = 0;
+            DataProvider.ExecuteNonQuery(GetConnection, "dbo.Schools_Insert"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    paramCollection.AddWithValue("@GsId", model.GsId);
+                    paramCollection.AddWithValue("@Name", model.Name);
+                    paramCollection.AddWithValue("@Type", model.Type);
+                    paramCollection.AddWithValue("@GradeRange", model.GradeRange);
+                    paramCollection.AddWithValue("@Enrollment", model.Enrollment);
+                    paramCollection.AddWithValue("@City", model.City);
+                    paramCollection.AddWithValue("@State", model.State);
+                    paramCollection.AddWithValue("@DistrictId", model.DistrictId);
+                    paramCollection.AddWithValue("@District", model.District);
+                    paramCollection.AddWithValue("@DistrictNCESId", model.DistrictNCESId);
+                    paramCollection.AddWithValue("@Address", model.Address);
+                    paramCollection.AddWithValue("@Phone", model.Phone);
+                    paramCollection.AddWithValue("@Fax", model.Fax);
+                    paramCollection.AddWithValue("@Website", model.Website);
+                    paramCollection.AddWithValue("@NCESId", model.NCESId);
+                    paramCollection.AddWithValue("@Lat", model.Lat);
+                    paramCollection.AddWithValue("@Lng", model.Lng);
+                    paramCollection.AddWithValue("@Polygon", model.Polygon);
+                    paramCollection.AddWithValue("@OverviewLink", model.OverviewLink);
+                    paramCollection.AddWithValue("@RatingsLink", model.RatingsLink);
+                    paramCollection.AddWithValue("@GsRating", model.GsRating);
+
+                    SqlParameter p = new SqlParameter("@Id", System.Data.SqlDbType.Int);
+                    p.Direction = System.Data.ParameterDirection.Output;
+
+                    paramCollection.Add(p);
+
+                }, returnParameters: delegate (SqlParameterCollection param)
+                {
+                    int.TryParse(param["@Id"].Value.ToString(), out Id);
+                }
+                );
+            return Id;
+        }
+
+        public void UpdateSchool(FullSchoolRequest model)
+        {
+            DataProvider.ExecuteNonQuery(GetConnection, "dbo.Schools_Update"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    SchoolParamMapper(model, paramCollection);
+                }, returnParameters: null
+            );
+        }
+
+        public List<FullSchoolRequest> GetAllSchools()
+        {
+            List<FullSchoolRequest> list = null;
+
+            DataProvider.ExecuteCmd(GetConnection, "dbo.Schools_Select"
+                , inputParamMapper: null
+                , map: delegate (IDataReader reader, short set)
+                {
+                    FullSchoolRequest school = new FullSchoolRequest();
+
+                    school = MapSchool(reader);
+
+                    if (list == null)
+                    {
+                        list = new List<FullSchoolRequest>();
+                    }
+                    list.Add(school);
+                }
+                );
+            return list;
+        }
+
+        public void PutSchoolPolygon(SchoolPolygonPutRequest model)
+        {
+            DataProvider.ExecuteNonQuery(GetConnection, "dbo.Schools_PutGeography"
+               , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+               {
+                   paramCollection.AddWithValue("@NcesId", model.NcesId);
+                   paramCollection.AddWithValue("@Polygon", model.Polygon);
+               }, returnParameters: null
+              );
+        }
+
+        public List<FullSchoolRequest> SchoolSearch(FullSchoolRequest model)
+        {
+            List<FullSchoolRequest> schoolList = null;
+
+            DataProvider.ExecuteCmd(GetConnection, "dbo.Schools_Search"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    SchoolParamMapper(model, paramCollection);
+                }, map: delegate (IDataReader reader, short set)
+                {
+                    FullSchoolRequest school = new FullSchoolRequest();
+                    school = MapSchool(reader);
+                    if (schoolList == null)
+                    {
+                        schoolList = new List<FullSchoolRequest>();
+                    }
+                    schoolList.Add(school);
+                }
+                );
+            return schoolList;
+        }
+
+        public List<GetListingSchools> GetListingSchools(string Id)
+        {
+            List<GetListingSchools> schoolList = null;
+
+            DataProvider.ExecuteCmd(GetConnection, "dbo.Listings_GetSchools"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    paramCollection.AddWithValue("@ListingId", Id);
+                }, map: delegate (IDataReader reader, short set)
+                {
+                    GetListingSchools school = new GetListingSchools();
+                    school = MapListingSchool(reader)
+                    ;
+                    if (schoolList == null)
+                    {
+                        schoolList = new List<GetListingSchools>();
+                    }
+                    schoolList.Add(school);
+                }
+                );
+            return schoolList;
+        }
+
+        public List<FullSchoolRequest> GetPolygonSchools(MapSchoolsRequest model)
+        {
+            List<FullSchoolRequest> schoolList = null;
+
+            DataProvider.ExecuteCmd(GetConnection, "dbo.Schools_GetSchoolsByPolygon"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    paramCollection.AddWithValue("@Polygon", model.Polygon);
+                }, map: delegate (IDataReader reader, short set)
+                {
+                    FullSchoolRequest school = new FullSchoolRequest();
+                    school = MapSchool(reader);
+                    if (schoolList == null)
+                    {
+                        schoolList = new List<FullSchoolRequest>();
+                    }
+                    schoolList.Add(school);
+                }
+                );
+            return schoolList;
+        }
+
+        private static void SchoolParamMapper(FullSchoolRequest model, SqlParameterCollection paramCollection)
+        {
+            paramCollection.AddWithValue("@GsId", model.GsId);
+            paramCollection.AddWithValue("@Name", model.Name);
+            paramCollection.AddWithValue("@Type", model.Type);
+            paramCollection.AddWithValue("@GradeRange", model.GradeRange);
+            paramCollection.AddWithValue("@Enrollment", model.Enrollment);
+            paramCollection.AddWithValue("@City", model.City);
+            paramCollection.AddWithValue("@State", model.State);
+            paramCollection.AddWithValue("@DistrictId", model.DistrictId);
+            paramCollection.AddWithValue("@District", model.District);
+            paramCollection.AddWithValue("@DistrictNCESId", model.DistrictNCESId);
+            paramCollection.AddWithValue("@Address", model.Address);
+            paramCollection.AddWithValue("@ZipCode", model.ZipCode);
+            paramCollection.AddWithValue("@Phone", model.Phone);
+            paramCollection.AddWithValue("@Fax", model.Fax);
+            paramCollection.AddWithValue("@Website", model.Website);
+            paramCollection.AddWithValue("@NCESId", model.NCESId);
+            paramCollection.AddWithValue("@Lat", model.Lat);
+            paramCollection.AddWithValue("@Lng", model.Lng);
+            paramCollection.AddWithValue("@Polygon", model.Polygon);
+            paramCollection.AddWithValue("@OverviewLink", model.OverviewLink);
+            paramCollection.AddWithValue("@RatingsLink", model.RatingsLink);
+            paramCollection.AddWithValue("@GsRating", model.GsRating);
+            paramCollection.AddWithValue("@Id", model.Id);
+        }
+
+        private static FullSchoolRequest MapSchool(IDataReader reader)
+        {
+            FullSchoolRequest school = new FullSchoolRequest();
+            int startingIndex = 0;
+            
+            school.Id = reader.GetSafeInt32(startingIndex++);
+            school.GsId = reader.GetSafeInt32(startingIndex++);
+            school.Name = reader.GetSafeString(startingIndex++);
+            school.Type = reader.GetSafeString(startingIndex++);
+            school.GradeRange = reader.GetSafeString(startingIndex++);
+            school.Enrollment = reader.GetSafeInt32(startingIndex++);
+            school.City = reader.GetSafeString(startingIndex++);
+            school.State = reader.GetSafeString(startingIndex++);
+            school.DistrictId = reader.GetSafeString(startingIndex++);
+            school.District = reader.GetSafeString(startingIndex++);
+            school.DistrictNCESId = reader.GetInt64(startingIndex++);
+            school.Address = reader.GetSafeString(startingIndex++);
+            school.ZipCode = reader.GetSafeString(startingIndex++);
+            school.Phone = reader.GetSafeString(startingIndex++);
+            school.Fax = reader.GetSafeString(startingIndex++);
+            school.Website = reader.GetSafeString(startingIndex++);
+            school.NCESId = reader.GetSafeString(startingIndex++);
+            school.Lat = reader.GetSafeString(startingIndex++);
+            school.Lng = reader.GetSafeString(startingIndex++);
+            school.Polygon = reader.GetSafeString(startingIndex++);
+            school.OverviewLink = reader.GetSafeString(startingIndex++);
+            school.RatingsLink = reader.GetSafeString(startingIndex++);
+            school.GsRating = reader.GetSafeInt32(startingIndex++);
+            school.DateAdded = reader.GetDateTime(startingIndex++);
+            school.DateModified = reader.GetDateTime(startingIndex++);
+
+            return school;
+        }
+
+        private static GetListingSchools MapListingSchool(IDataReader reader)
+        {
+            GetListingSchools school = new GetListingSchools();
+            int startingIndex = 0;
+
+            school.Id = reader.GetSafeInt32(startingIndex++);
+            school.GsId = reader.GetSafeInt32(startingIndex++);
+            school.Name = reader.GetSafeString(startingIndex++);
+            school.Type = reader.GetSafeString(startingIndex++);
+            school.GradeRange = reader.GetSafeString(startingIndex++);
+            school.Enrollment = reader.GetSafeInt32(startingIndex++);
+            school.City = reader.GetSafeString(startingIndex++);
+            school.State = reader.GetSafeString(startingIndex++);
+            school.DistrictId = reader.GetSafeString(startingIndex++);
+            school.District = reader.GetSafeString(startingIndex++);
+            school.DistrictNCESId = reader.GetInt64(startingIndex++);
+            school.Address = reader.GetSafeString(startingIndex++);
+            school.ZipCode = reader.GetSafeString(startingIndex++);
+            school.Phone = reader.GetSafeString(startingIndex++);
+            school.Fax = reader.GetSafeString(startingIndex++);
+            school.Website = reader.GetSafeString(startingIndex++);
+            school.NCESId = reader.GetSafeString(startingIndex++);
+            school.Lat = reader.GetSafeString(startingIndex++);
+            school.Lng = reader.GetSafeString(startingIndex++);
+            school.Polygon = reader.GetSafeString(startingIndex++);
+            school.OverviewLink = reader.GetSafeString(startingIndex++);
+            school.RatingsLink = reader.GetSafeString(startingIndex++);
+            school.GsRating = reader.GetSafeInt32(startingIndex++);
+            school.DateAdded = reader.GetDateTime(startingIndex++);
+            school.DateModified = reader.GetDateTime(startingIndex++);
+            school.ListingId = reader.GetSafeString(startingIndex++);
+
+            return school;
+        }
+
+        public int InsertDistrict(DistrictAddRequest model)
+        {
+            int Id = 0;
+            DataProvider.ExecuteNonQuery(GetConnection, "dbo.Districts_Insert"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    paramCollection.AddWithValue("@Name", model.Name);
+                    paramCollection.AddWithValue("@DistrictRating", model.DistrictRating);
+                    paramCollection.AddWithValue("@Address", model.Address);
+                    paramCollection.AddWithValue("@City", model.City);
+                    paramCollection.AddWithValue("@County", model.County);
+                    paramCollection.AddWithValue("@ZipCode", model.ZipCode);
+                    paramCollection.AddWithValue("@Lat", model.Lat);
+                    paramCollection.AddWithValue("@Lng", model.Lng);
+                    paramCollection.AddWithValue("@Phone", model.Phone);
+                    paramCollection.AddWithValue("@Fax", model.Fax);
+                    paramCollection.AddWithValue("@Website", model.Website);
+                    paramCollection.AddWithValue("@GradeRange", model.GradeRange);
+                    paramCollection.AddWithValue("@TotalSchools", model.TotalSchools);
+                    paramCollection.AddWithValue("@HighSchools", model.HighSchools);
+                    paramCollection.AddWithValue("@MiddleSchools", model.MiddleSchools);
+                    paramCollection.AddWithValue("@ElementarySchools", model.ElementarySchools);
+                    paramCollection.AddWithValue("@PublicSchools", model.PublicSchools);
+                    paramCollection.AddWithValue("@CharterSchools", model.CharterSchools);
+                    paramCollection.AddWithValue("@Polygon", model.Polygon);
+                    paramCollection.AddWithValue("@NcesCode", model.NcesCode);
+                   
+
+                    SqlParameter p = new SqlParameter("@Id", System.Data.SqlDbType.Int);
+                    p.Direction = System.Data.ParameterDirection.Output;
+
+                    paramCollection.Add(p);
+
+                }, returnParameters: delegate (SqlParameterCollection param)
+                {
+                    int.TryParse(param["@Id"].Value.ToString(), out Id);
+                }
+                );
+            return Id;
+        }
+
+        
+
+        public void PutDistrictPolygon(DistrictPolygonPutRequest model)
+        {
+            DataProvider.ExecuteNonQuery(GetConnection, "dbo.Districts_PutPolygons"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    paramCollection.AddWithValue("@NcesCode", model.NcesCode);
+                    paramCollection.AddWithValue("@Polygon", model.Polygon);
+                }, returnParameters: null
+               );
+        }
+
+        public List<FullDistrictRequest> DistrictSearch(FullDistrictRequest model)
+        {
+            List<FullDistrictRequest> districtList = null;
+
+            DataProvider.ExecuteCmd(GetConnection, "dbo.Districts_Search"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    DistrictParamMapper(model, paramCollection);
+                }, map: delegate (IDataReader reader, short set)
+                {
+                    FullDistrictRequest district = new FullDistrictRequest();
+                    district = MapDistrict(reader);
+                    if (districtList == null)
+                    {
+                        districtList = new List<FullDistrictRequest>();
+                    }
+                    districtList.Add(district);
+                }
+                );
+            return districtList;
+        }
+
+        private void DistrictParamMapper(FullDistrictRequest model, SqlParameterCollection paramCollection)
+        {
+            paramCollection.AddWithValue("@Name", model.Name);
+            paramCollection.AddWithValue("@DistrictRating", model.DistrictRating);
+            paramCollection.AddWithValue("@Address", model.Address);
+            paramCollection.AddWithValue("@City", model.City);
+            paramCollection.AddWithValue("@County", model.County);
+            paramCollection.AddWithValue("@ZipCode", model.ZipCode);
+            paramCollection.AddWithValue("@Lat", model.Lat);
+            paramCollection.AddWithValue("@Lng", model.Lng);
+            paramCollection.AddWithValue("@Phone", model.Phone);
+            paramCollection.AddWithValue("@Fax", model.Fax);
+            paramCollection.AddWithValue("@Website", model.Website);
+            paramCollection.AddWithValue("@GradeRange", model.GradeRange);
+            paramCollection.AddWithValue("@TotalSchools", model.TotalSchools);
+            paramCollection.AddWithValue("@HighSchools", model.HighSchools);
+            paramCollection.AddWithValue("@MiddleSchools", model.MiddleSchools);
+            paramCollection.AddWithValue("@ElementarySchools", model.ElementarySchools);
+            paramCollection.AddWithValue("@PublicSchools", model.PublicSchools);
+            paramCollection.AddWithValue("@CharterSchools", model.CharterSchools);
+            paramCollection.AddWithValue("@Polygon", model.Polygon);
+            paramCollection.AddWithValue("@NcesCode", model.NcesCode);
+            paramCollection.AddWithValue("@Id", model.Id);
+        }
+
+
+        private static FullDistrictRequest MapDistrict(IDataReader reader)
+        {
+            FullDistrictRequest district = new FullDistrictRequest();
+            int startingIndex = 0;
+
+            district.Name = reader.GetSafeString(startingIndex++);
+            district.DistrictRating = reader.GetSafeInt32(startingIndex++);
+            district.Address = reader.GetSafeString(startingIndex++);
+            district.City = reader.GetSafeString(startingIndex++);
+            district.County = reader.GetSafeString(startingIndex++);
+            district.ZipCode= reader.GetSafeString(startingIndex++);
+            district.Lat = reader.GetSafeString(startingIndex++);
+            district.Lng = reader.GetSafeString(startingIndex++);
+            district.Phone = reader.GetSafeString(startingIndex++);
+            district.Fax = reader.GetSafeString(startingIndex++);
+            district.Website = reader.GetSafeString(startingIndex++);
+            district.GradeRange = reader.GetSafeString(startingIndex++);
+            district.TotalSchools = reader.GetSafeInt32(startingIndex++);
+            district.ElementarySchools = reader.GetSafeInt32(startingIndex++);
+            district.MiddleSchools = reader.GetSafeInt32(startingIndex++);
+            district.HighSchools = reader.GetSafeInt32(startingIndex++);
+            district.PublicSchools = reader.GetSafeInt32(startingIndex++);
+            district.CharterSchools = reader.GetSafeInt32(startingIndex++);
+            district.Polygon = reader.GetSafeString(startingIndex++);
+            district.NcesCode = reader.GetSafeInt32(startingIndex++);
+            district.DateAdded = reader.GetDateTime(startingIndex++);
+            district.DateModified = reader.GetDateTime(startingIndex++);
+            district.Id = reader.GetSafeInt32(startingIndex++);
+
+            return district;
+        }
+
+        public void PutZipCode(ZipCodePutRequest model)
+        {
+            DataProvider.ExecuteNonQuery(GetConnection, "dbo.ZipCodes_Insert"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    paramCollection.AddWithValue("@ZipCode", model.ZipCode);
+                    paramCollection.AddWithValue("@County", model.County);
+                    paramCollection.AddWithValue("@State", model.State);
+                    paramCollection.AddWithValue("@Polygon", model.Polygon);
+                }, returnParameters: null
+                );
+        }
+
+       
+
+        public ZipCodeGetRequest GetZipCode(string search)
+        {
+            ZipCodeGetRequest zipCode = new ZipCodeGetRequest();
+
+            DataProvider.ExecuteCmd(GetConnection, "dbo.ZipCodes_SelectByZipCode"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    paramCollection.AddWithValue("@ZipCode", search);
+
+                }, map: delegate (IDataReader reader, short set)
+                {
+
+                    zipCode = MapZipCode(reader);
+
+                }
+                );
+            return zipCode;
+        }
+
+        public List<FullSchoolRequest> GetZipCodeSchools(string ZipCode)
+        {
+            List<FullSchoolRequest> schoolList = null;
+
+            DataProvider.ExecuteCmd(GetConnection, "dbo.ZipCodes_GetSchools"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    paramCollection.AddWithValue("@ZipCode", ZipCode);
+                }, map: delegate (IDataReader reader, short set)
+                {
+                    FullSchoolRequest school = new FullSchoolRequest();
+                    school = MapSchool(reader);
+                    if (schoolList == null)
+                    {
+                        schoolList = new List<FullSchoolRequest>();
+                    }
+                    schoolList.Add(school);
+                }
+                );
+            return schoolList;
+        }
+
+        public List<FullDistrictRequest> GetZipCodeDistricts(string ZipCode)
+        {
+            List<FullDistrictRequest> districtList = null;
+
+            DataProvider.ExecuteCmd(GetConnection, "dbo.ZipCodes_GetDistricts"
+                , inputParamMapper: delegate (SqlParameterCollection paramCollection)
+                {
+                    paramCollection.AddWithValue("@ZipCode", ZipCode);
+                }, map: delegate (IDataReader reader, short set)
+                {
+                    FullDistrictRequest district = new FullDistrictRequest();
+                    district = MapDistrict(reader);
+                    if (districtList == null)
+                    {
+                        districtList = new List<FullDistrictRequest>();
+                    }
+                    districtList.Add(district);
+                }
+                );
+            return districtList;
+        }
+
+        private static ZipCodeGetRequest MapZipCode(IDataReader reader)
+        {
+            ZipCodeGetRequest zipCode = new ZipCodeGetRequest();
+            int startingIndex = 0;
+
+            zipCode.ZipCode = reader.GetSafeString(startingIndex++);
+            zipCode.County = reader.GetSafeString(startingIndex++);
+            zipCode.State = reader.GetSafeString(startingIndex++);
+            zipCode.Polygon = reader.GetSafeString(startingIndex++);
+            zipCode.DateAdded = reader.GetDateTime(startingIndex++);
+            zipCode.DateModified = reader.GetDateTime(startingIndex++);
+            zipCode.Id = reader.GetSafeInt32(startingIndex++);
+            return zipCode;
+        }
+    }
+};
