@@ -1,0 +1,125 @@
+ [Route("PutZipCode"), HttpPost]
+        public HttpResponseMessage InsertZipCode(ZipCodePutRequest model)
+        {
+            if (!ModelState.IsValid && model != null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+            string input = model.Polygon;
+
+            var sequence = new List<GeoCoordinate>();
+
+            var endCall = new { };
+
+            var Key = new Key();
+
+            var multi = false;
+
+            var list = input.Split(' ');
+            var length = list.Length;
+
+            var count = 0;
+            foreach (var set in list)
+            {
+                var pair = set.Split(',');
+                if (pair.Length > 3)
+                {
+                    var lonOne = pair[0];
+                    var latOne = pair[1];
+
+                    var bundle = pair[2].Split('<');
+
+                    var latTwo = pair[3];
+
+                    var Break = bundle[1].Split('>');
+
+                    var lonTwo = Break[1];
+
+                    Key.startCall = @"MULTIPOLYGON(((";
+                    Key.endCall = @")))";
+
+                    GeoCoordinate coordinate1 = new GeoCoordinate();
+                    GeoCoordinate coordinate2 = new GeoCoordinate();
+
+                    coordinate2.Longitude = "((" + lonTwo;
+                    coordinate2.Latitude = latTwo;
+
+                    coordinate1.Longitude = lonOne;
+                    coordinate1.Latitude = latOne + "))";
+
+                    sequence.Add(coordinate1);
+                    sequence.Add(coordinate2);
+
+                    multi = true;
+
+                }
+                else
+                {
+                    GeoCoordinate coordinate = new GeoCoordinate();
+
+                    var lon = pair[0];
+                    var lat = pair[1];
+
+                    if (count == 0)
+                    {
+                        var split = lon.Split('\"');
+                        coordinate.Longitude = split[0];
+                    }
+                    else
+                    {
+                        coordinate.Longitude = lon;
+                    }
+
+
+                    if (count == (length - 1))
+                    {
+                        var split = lat.Split('\"');
+                        coordinate.Latitude = split[0];
+                    }
+                    else
+                    {
+                        coordinate.Latitude = lat;
+                    }
+
+                    sequence.Add(coordinate);
+                }
+                count++;
+            }
+
+
+            if (multi == true)
+            {
+
+            }
+            else
+            {
+                Key.startCall = @"POLYGON((";
+                Key.endCall = @"))";
+            }
+
+            var coordinates = new List<GeoCoordinate>();
+            var countSecond = 0;
+            var sb = new StringBuilder();
+
+            foreach (var coordinate in sequence)
+            {
+                if (countSecond == 0)
+                {
+                    sb.Append(Key.startCall + coordinate.Longitude + " " + coordinate.Latitude);
+                }
+                else
+                {
+                    sb.Append("," + coordinate.Longitude + " " + coordinate.Latitude);
+                }
+
+                countSecond++;
+            }
+
+            sb.Append(Key.endCall);
+
+            model.Polygon = sb.ToString();
+            _schoolService.PutZipCode(model);
+            SuccessResponse response = new SuccessResponse();
+
+            return Request.CreateResponse(HttpStatusCode.OK, response);
+        }
