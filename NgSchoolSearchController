@@ -1,0 +1,574 @@
+                    <div class="col-md-4">
+                        <select class="form-control" ng-model="favoriteSchoolsCtrl.schoolGradeStart">
+                            <option value=0>---Start Grade---</option>
+                            <option value="PK">PK</option>
+                            <option value="K">K</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                        </select>
+                        <i class="fancy-arrow"></i>
+                    </div>
+                    <br />
+                    <div>-to-</div>
+                    <br />
+                    <div class="fancy-form">
+                        <div class="col-md-4">
+                            <select class="form-control" ng-model="favoriteSchoolsCtrl.schoolGradeEnd">
+                                <option value=0>---End Grade---</option>
+                                <option value="K">K</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                            <i class="fancy-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                GREAT SCHOOLS RATING:
+                <div>
+                    <div style="overflow:hidden" class="fancy-form">
+                        <!-- select -->
+                        <div class="col-md-4">
+                            <select class="form-control" ng-model="favoriteSchoolsCtrl.schoolRating">
+                                <option value=0>---Select Rating---</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                            <i class="fancy-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div>
+                    CITY:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.schoolCity" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    STATE:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.schoolState" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    DISTRICT NAME:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.schoolDistrict" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    ADDRESS:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.schoolAdress" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    ZIPCODE:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.schoolZipCode" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    PHONE:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.schoolPhone" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    FAX:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.schoolFax" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    <input type="submit" value="Search" class="btn btn-success pull-right">
+                </div>
+            </form>
+        </div>
+        <div ng-show="favoriteSchoolsCtrl.searchDistricts">
+            <h5>District Search Criteria</h5>
+            <form class="container col-md-12" name="districtSearchForm" ng-submit="favoriteSchoolsCtrl.submitSearch(districtSearchForm)">
+
+                <div>
+                    DISTRICT NAME:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.districtName" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                GREAT SCHOOLS RATING:
+                <div>
+                    <div style="overflow:hidden" class="fancy-form">
+                        <!-- select -->
+                        <div class="col-md-4">
+                            <select class="form-control" ng-model="favoriteSchoolsCtrl.districtRating">
+                                <option value=0>---Start Rating---</option>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                            <i class="fancy-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div>
+                    CITY:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.districtCity" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    STATE:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.districtCounty" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    ZIPCODE:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.districtZipCode" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    PHONE:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.districtPhone" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    FAX:
+                    <input type="tel" class="form-control ng-pristine ng-untouched ng-valid" ng-model="favoriteSchoolsCtrl.districtFax" placeHolder="Be sure spell and punctuate correctly!" />
+                </div>
+                <br />
+                <div>
+                    <input type="submit" value="Search" class="btn btn-success pull-right">
+                </div>
+            </form>
+        </div>
+
+        @*Favorited*@
+        <div class="container" ng-show="favoriteSchoolsCtrl.favoriteHolders">
+            <div class="toggle toggle-transparent-body col-md-4">
+                <div class="toggle">
+                    <label>Favorited Schools</label>
+                    <div class="toggle-content active" style="display: block;">
+                        <div ng-repeat="favorite in favoriteSchoolsCtrl.schools track by favorite.id">
+                            <div id="{{favorite.id}}">
+                                <div>
+                                    <h4>
+                                        <strong>
+                                            {{favorite.name}}
+                                            <button ng-click="favoriteSchoolsCtrl.removeFavorite(favorite.id)" class="remove-item btn btn-default btn-xs pull-right">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                            </button>
+                                        </strong>
+                                    </h4>
+                                    <strong>Great Schools Rating: </strong><span class="badge badge-red">{{favorite.gsRating}}</span>
+                                </div><br />
+
+                                <label>School Details</label>
+                                <div>
+                                    <p>
+                                        <ul>
+                                            <li>Type: {{favorite.type}}</li>
+                                            <li>Grade Range: {{favorite.gradeRange}}</li>
+                                            <li>Student Body Size: {{favorite.enrollment}}</li>
+                                            <li>
+                                                School District: <br />
+                                                <div>
+                                                    {{favorite.district}}
+                                                    <br />
+                                                    <a ng-href="/Schools/Search/{{favoriteSchoolsCtrl.caseId}}/{{favorite.districtNCESId}}">
+                                                        <i class="fa fa-search"></i>
+                                                        More about this district
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>Address: {{favorite.address}}</li>
+                                            <li>Website: <a href="{{favorite.website}}">{{favorite.name}}</a></li>
+                                            <li>Phone: {{favorite.phone}}</li>
+
+                                        </ul>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 toggle toggle-transparent-body">
+                <label>Favorited Districts</label>
+                <div class="toggle-content" style="display: block;">
+                    <div>
+                        <div ng-repeat="favorite in favoriteSchoolsCtrl.districts track by favorite.id" class="col-md-11">
+                            <div>
+                                <h4>
+                                    <strong>
+                                        {{favorite.name}}
+                                        <button ng-click="favoriteSchoolsCtrl.removeFavorite(favorite.id)" class="remove-item btn btn-default btn-xs pull-right">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </strong>
+                                </h4>
+(function () {
+            "use strict";
+            angular.module(APPNAME)
+                .controller('favoriteSchoolsController', FavoriteSchoolsController);
+
+            FavoriteSchoolsController.$inject = ['$scope', '$baseService', 'favoriteSchoolsService', 'schoolsService', '$location']
+
+            function FavoriteSchoolsController(
+                $scope
+                , $baseController
+                , favoriteSchoolsService
+                , schoolsService
+                , $location) {
+
+                var vm = this;
+                vm.favorites = null;
+                vm.favorite = null;
+                vm.caseId =
+
+                
+                vm.searchToggleVal = false;
+                vm.searchSchoolVal = false;
+                vm.searchDistrictVal = false;
+                vm.searchBoxRating = false;
+                vm.searchBoxGradeRange = false;
+                vm.searchBoxType = false;
+                vm.searchResults = false;
+
+
+                vm.count = false;
+                vm.searchDistricts = false;
+                vm.searchSchools = false;
+                vm.favoriteHolders = false;
+
+                vm.range = null;
+                vm.textType = null;
+                vm.districtType = null;
+
+                vm.schoolSearch = [];
+                vm.districtSearch = [];
+                vm.schools = [];
+                vm.districts = [];
+                vm.favoriteSchools = [];
+                vm.favoriteDistricts = [];
+
+                vm.results = [];
+                vm.resultsReset = [];
+
+               //Arrays to capture values
+                vm.selectedDistrictSearch = [];
+                vm.selectedSchoolSearch = [];
+
+
+                vm.selectedRangeStart = [];
+                vm.selectedRangeEnd = [];
+
+
+                vm.$location = window.location;
+
+                vm.$scope = $scope;
+                vm.favoriteSchoolsService = favoriteSchoolsService;
+                vm.schoolsService = schoolsService;
+                
+
+                //Functions
+                vm.receiveItems = _receiveItems;
+
+                vm.onError = _onError;
+
+                vm.onSchoolSuccess = _onSchoolSuccess;
+                vm.onDistrictSuccess = _onDistrictSuccess;
+                vm.onRemoveSuccess = _onRemoveSuccess;
+                vm.onGetSearchSuccess = _onGetSearchSuccess;
+
+                vm.getSchoolInfo = _getSchoolInfo;
+
+                vm.removeFavorite = _removeFavorite;
+
+                vm.searchToggle = _searchToggle;
+                vm.searchType = _searchType;
+                vm.searchSchoolOrDis = _searchSchoolOrDis;
+                vm.schoolSearchCriteria = _schoolSearchCriteria;
+                vm.districtSearchCriteria = _districtSearchCriteria;
+
+                vm.submitSearch = _submitSearch;
+                vm.addFavorite = _addFavorite;
+
+                vm.notify = vm.favoriteSchoolsService.getNotifier($scope);
+
+                $baseController.merge(vm, $baseController);
+
+                render();
+
+                function render() {
+                    var caseId = sabio.page.caseId;
+                    if (caseId > 0) {
+                        vm.favoriteHolders = true;
+                    };
+                    vm.favoriteSchoolsService.getFavorites(caseId, vm.receiveItems, vm.onFavError);
+                }
+
+                function _schoolSearchCriteria() {
+                    function getRangeValues() {
+                        var startRange = vm.schoolGradeStart;
+                        var endRange = vm.schoolGradeEnd;
+                        vm.schoolGradeRange = startRange + '-' + endRange;
+                    };
+                    if (vm.schoolGradeStart != null && vm.schoolGradeEnd != null) {
+                        getRangeValues();
+                    };
+                    var data = {
+                        "GsId": vm.schoolGsId
+                       , "Name": vm.schoolName
+                       , "Type": vm.schoolType
+                       , "GradeRange": vm.schoolGradeRange
+                       , "Enrollment": vm.schoolEnrollment
+                       , "City": vm.schoolCity
+                       , "State": vm.schoolState
+                       , "DistrictId": vm.schoolDistrictId
+                       , "District": vm.schoolDistrict
+                       , "DistrictNCESId": vm.schoolDistrictNCESId
+                       , "Address": vm.schoolAddress
+                       , "ZipCode": vm.schoolZipCode
+                       , "Phone": vm.schoolPhone
+                       , "Fax": vm.schoolFax
+                       , "Website": vm.schoolWebsite
+                       , "NcesId": vm.schoolNcesId
+                       , "Lat": vm.schoolLat
+                       , "Lng": vm.schoolLng
+                       , "Polygon": vm.schoolPolygon
+                       , "OverviewLink": vm.schoolOverviewLink
+                       , "RatingsLink": vm.schoolRatingsLink
+                       , "GsRating": vm.schoolRating
+                       , "Id": vm.schoolId
+                    };
+                    return data
+                }
+
+                function _districtSearchCriteria() {
+                    var data = {
+                        "Name": vm.districtName
+                       , "DistrictRating": vm.districtDistrictRating
+                       , "Address": vm.districtAddress
+                       , "City": vm.districtCity
+                       , "County": vm.districtCounty
+                       , "ZipCode": vm.districtZipCode
+                       , "Lat": vm.districtLat
+                       , "Lng": vm.districtLng
+                       , "Phone": vm.districtPhone
+                       , "Fax": vm.districtFax
+                       , "Website": vm.districtWebsite
+                       , "GradeRange": vm.districtGradeRange
+                       , "TotalSchools": vm.districtTotalSchools
+                       , "ElementrySchools": vm.districtElementarySchools
+                       , "MiddleSchools": vm.districtMiddleSchools
+                       , "HighSchools": vm.districtHighSchools
+                       , "PublicSchools": vm.districtPublicSchools
+                       , "CharterSchools": vm.districtCharterSchools
+                       , "Polygon": vm.districtPolygon
+                       , "NcesCode": vm.districtNcesCode
+                       , "Id": vm.districtId
+                    };
+                    return data
+                }
+
+
+                //AJAX Handlers
+                function _receiveItems(data) {
+                    vm.notify(function () {
+                        vm.favorites = data;
+                        for (var i = 0; i < vm.favorites.length; i++) {
+                            var favorite = vm.favorites[i]
+                            if (favorite.gsId !== 0) {
+                                _getSchoolInfo(favorite);
+                            }
+                            if (favorite.gsId === 0)
+                                _getDistrictInfo(favorite);
+                        };
+                    });
+                };
+
+                function _onError(jqXhr, error) {
+                    console.error(error);
+                };
+
+                function _getSchoolInfo(favorite) {
+                    var data = vm.schoolSearchCriteria();
+                    data.GsId = parseInt(favorite.gsId);
+                    vm.schoolsService.searchSchools(data, vm.onSchoolSuccess, vm.onError);
+                };
+
+                function _getDistrictInfo(favorite) {
+                    var data = vm.districtSearchCriteria();
+                    data.NcesCode = favorite.ncesId
+                    vm.schoolsService.searchDistricts(data, vm.onDistrictSuccess, vm.onError);
+                };
+
+                function _onSchoolSuccess(data) {
+                    vm.$scope.$apply(function() {
+                        if (data.items.id !== 0) {
+                            var favorite = data.items[0];
+                            vm.schools.push(favorite);
+                        };
+                    });
+                };
+
+                function _onDistrictSuccess(data) {
+                    vm.$scope.$apply(function () {
+                        if (data.items.id !== 0) {
+                            var favorite = data.items[0];
+                            vm.districts.push(favorite);
+                        };
+                    });
+                };
+
+                function _onGetSearchSuccess(data) {
+                    vm.count = true;
+                    vm.searchResults = true;
+                    vm.$scope.$apply(function() {
+                        if (data.items !== null) {
+                            if (data.item) {
+                                if (data.item.id !== 0) {
+                                    if (data.item.gsRating == 0) {
+                                        data.item.gsRating = "Not Rated";
+                                    };
+
+                                    vm.results.push(data.item);
+                                    vm.resultsReset.push(data.item);
+                                };
+                            } else {
+                                for (var i = 0; i < data.items.length; i++) {
+                                    var q = data.items[i]
+                                    
+                                    if (q.gsRating == 0) {
+                                        q.gsRating = "Not Rated";
+                                    };
+
+                                    vm.results.push(q);
+                                    vm.resultsReset.push(q);
+                                };
+                            }
+                        }
+                    });
+                };
+
+                function _addFavorite(result) {
+                    for (var i = 0; i < vm.results.length; i++) {
+                        if (result == vm.results[i].id) {
+                            var fav = vm.results[i];
+                            var name = fav.name;
+                            var caseId = vm.caseId;
+                            var userId = vm.currentUserId
+                            if (fav.gsId) {
+                                var gsId = fav.gsId;
+                                var ncesId = fav.ncesId;
+                                var isSchool = true;
+                                var data = { caseId: caseId, name: name, userId: userId, gsId: gsId, ncesId: ncesId, isSchool: isSchool };
+                                vm.favoriteSchoolsService.addFavorite(gsId, data, _onAddFavoriteSuccess, _onError);
+                                vm.schools.push(fav);
+                            } else {
+                                var gsId = 0;
+                                var ncesId = fav.ncesCode
+                                var name = fav.name;
+                                var data = { caseId: caseId, name: name, userId: userId, gsId: gsId, ncesId: ncesId, isSchool: isSchool };
+                                vm.favoriteSchoolsService.addFavorite(gsId, data, _onAddFavoriteSuccess, _onError);
+                                vm.districts.push(fav);
+                            };
+                        };
+                    };
+                };
+
+                function _onAddFavoriteSuccess() {
+                    console.log('added favorite');
+                };
+
+                function _removeFavorite(id) {
+                    vm.favoriteSchoolsService.deleteFavorite(id, vm.onRemoveSuccess, vm.onError)
+                };
+
+                function _onRemoveSuccess() {
+                    console.log("Delete success")
+                };
+
+
+
+                //Search Functionality
+                function _searchToggle() {
+                    if (vm.searchToggleVal == true) {
+                        vm.searchToggleVal = false;
+                        vm.searchSchools = false;
+                        vm.searchDistricts = false;
+                    } else {
+                        vm.searchToggleVal = true;
+                    };
+                };
+
+             
+
+                function _searchType() {
+                    var type = vm.type;
+                    vm.selectedSearch = [];
+                    if (type === "Districts") {
+                        vm.selectedDistrictSearch = vm.districtTypes;
+                        vm.searchDistricts = true;
+                        vm.searchSchools = false;
+                    } else {
+                        vm.selectedSchoolSearch = vm.schoolTypes;
+                        vm.searchDistricts = false;
+                        vm.searchSchools = true;
+                    };
+                };
+
+                function _searchSchoolOrDis() {
+                    var type = vm.type
+                    if (type === "Districts") {
+                        vm.searchDistrictType();
+                    } else {
+                        vm.searchSchoolType();
+                    };
+                };
+
+                function _submitSearch(submitForm) {
+                    vm.results = [];
+                    vm.resultsReset = [];
+                    vm.filter = true;
+                    var search = vm.type;
+                    if (search == 'Schools') {
+                        var data = vm.schoolSearchCriteria();
+                        vm.schoolsService.searchSchools(data, vm.onGetSearchSuccess, vm.onError)
+                    } else {
+                        var data = vm.districtsSearchCriteria();
+                        vm.schoolsService.searchDistricts(data, vm.onGetSearchSuccess, vm.onError)
+                    }
+                    
+                    };
+                };
+        })();
