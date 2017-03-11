@@ -1,0 +1,242 @@
+ALTER proc [dbo].[ZipCodes_GetSchools]
+				@ZipCode nvarchar(10)
+
+/*
+Declare @ZipCode nvarchar(10) = '93010'
+
+Execute [dbo].[ZipCodes_GetSchools]
+							@ZipCode
+*/
+
+as
+
+BEGIN
+
+	Declare @Polygon geography
+			,@PostalCode int
+			,@Zip int
+			,@Count int = 0
+			,@Index int
+			,@Geog geography
+			,@NcesId nvarchar(50)
+			,@Valid bit
+			,@Intersection nvarchar(50)
+		
+	CREATE TABLE #Results(
+						Id int
+					   ,GsId int
+					   ,Name nvarchar(128)
+					   ,Type nvarchar(50)
+					   ,GradeRange nvarchar(50)
+					   ,Enrollment int
+					   ,City nvarchar(50)
+					   ,State nvarchar(10)
+					   ,DistrictId nvarchar(10)
+					   ,District nvarchar(128)
+					   ,DistrictNCESID bigint
+					   ,Address nvarchar(128)
+					   ,ZipCode nvarchar(50)
+					   ,Phone nvarchar(50)
+					   ,Fax nvarchar(50)
+					   ,Website nvarchar(50)
+					   ,NcesId nvarchar(50)
+					   ,Lat nvarchar(50)
+					   ,Lng nvarchar(50)
+					   ,Polygon nvarchar(MAX)
+					   ,OverviewLink nvarchar(128)
+					   ,RatingsLink nvarchar(128)
+					   ,GsRating int
+					   ,DateAdded datetime
+					   ,DateModified datetime)
+
+	SELECT @Polygon = z.geog
+		FROM ZipCodes z
+		WHERE z.zipCode = @ZipCode
+
+	SET @PostalCode = CAST(@ZipCode as int)
+
+	WHILE (@Count < 3)
+	BEGIN
+		
+		IF OBJECT_ID('tempdb..#Temp') IS NOT NULL DROP TABLE #Temp
+		SET @Zip = (@PostalCode + @Count)
+
+		SELECT *
+		INTO #Temp
+		FROM Schools s
+		WHERE s.ZipCode = @Zip AND s.geog IS NOT NULL
+
+		
+		--SELECT * from #temp
+
+		WHILE EXISTS(SELECT * FROM #Temp)
+			BEGIN
+
+			Select Top 1 @Index = Id
+						 ,@Geog = Geog
+						 ,@NcesId = NcesId
+			From #Temp
+
+			SET @Valid = (@Geog.STIntersects(@Polygon));
+
+			WHILE (@Valid = 1) 
+			BEGIN
+				IF NOT EXISTS (SELECT * FROM #Results WHERE NcesId = @NcesId)
+					BEGIN
+					INSERT INTO #Results
+							(id
+						  ,gsId
+						  ,name
+						  ,type
+						  ,gradeRange
+						  ,enrollment
+						  ,city
+						  ,state
+						  ,districtId
+						  ,district
+						  ,districtNCESID
+						  ,address
+						  ,zipCode
+						  ,phone
+						  ,fax
+						  ,website
+						  ,ncesId
+						  ,lat
+						  ,lng
+						  ,polygon
+						  ,overviewLink
+						  ,ratingsLink
+						  ,gsRating
+						  ,dateAdded
+						  ,dateModified)
+					SELECT [id]
+						  ,[gsId]
+						  ,[name]
+						  ,[type]
+						  ,[gradeRange]
+						  ,[enrollment]
+						  ,[city]
+						  ,[state]
+						  ,[districtId]
+						  ,[district]
+						  ,[districtNCESID]
+						  ,[address]
+						  ,[zipCode]
+						  ,[phone]
+						  ,[fax]
+						  ,[website]
+						  ,[ncesId]
+						  ,[lat]
+						  ,[lng]
+						  ,[polygon]
+						  ,[overviewLink]
+						  ,[ratingsLink]
+						  ,[gsRating]
+						  ,[dateAdded]
+						  ,[dateModified] 
+					FROM Schools s
+					WHERE s.ncesId = @NcesId
+					END
+			SET @Valid = 0
+			END
+
+		DELETE #Temp WHERE Id = @Index
+		END
+
+	SET @Count = @Count + 1
+	END
+
+	WHILE (@Count < 3)
+	BEGIN
+		IF OBJECT_ID('tempdb..#Temp2') IS NOT NULL DROP TABLE #Temp2
+		SET @Zip = (@PostalCode + @Count)
+
+		SELECT *
+		INTO #Temp2
+		FROM Schools s
+		WHERE s.ZipCode = (@Zip) AND s.geog IS NOT NULL
+		
+		--SELECT * from #temp
+
+		WHILE EXISTS(SELECT * FROM #Temp2)
+			BEGIN
+
+			Select Top 1 @Index = Id
+						 ,@Geog = Geog
+						 ,@NcesId = NcesId
+			From #Temp2
+
+			SET @Valid = (@Geog.STIntersects(@Polygon));
+	WHILE (@Valid = 1) 
+			BEGIN
+			IF NOT EXISTS (SELECT * FROM #Results WHERE NcesId = @NcesId)
+				BEGIN
+				INSERT INTO #Results
+							(id
+						  ,gsId
+						  ,name
+						  ,type
+						  ,gradeRange
+						  ,enrollment
+						  ,city
+						  ,state
+						  ,districtId
+						  ,district
+						  ,districtNCESID
+						  ,address
+						  ,zipCode
+						  ,phone
+						  ,fax
+						  ,website
+						  ,ncesId
+						  ,lat
+						  ,lng
+						  ,polygon
+						  ,overviewLink
+						  ,ratingsLink
+						  ,gsRating
+						  ,dateAdded
+						  ,dateModified)
+					SELECT [id]
+						  ,[gsId]
+						  ,[name]
+						  ,[type]
+						  ,[gradeRange]
+						  ,[enrollment]
+						  ,[city]
+						  ,[state]
+						  ,[districtId]
+						  ,[district]
+						  ,[districtNCESID]
+						  ,[address]
+						  ,[zipCode]
+						  ,[phone]
+						  ,[fax]
+						  ,[website]
+						  ,[ncesId]
+						  ,[lat]
+						  ,[lng]
+						  ,[polygon]
+						  ,[overviewLink]
+						  ,[ratingsLink]
+						  ,[gsRating]
+						  ,[dateAdded]
+						  ,[dateModified] 
+				FROM Schools s
+				WHERE s.ncesId = @NcesId
+
+				END
+
+			SET @Valid = 0
+			END
+
+		DELETE #Temp2 WHERE Id = @Index
+		END
+	SET @Count = @Count + 1
+	END	
+
+	SELECT * 
+	FROM #Results
+
+	DROP TABLE #Results
+END
