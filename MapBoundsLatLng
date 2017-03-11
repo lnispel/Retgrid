@@ -1,0 +1,25 @@
+ function _showZones() {
+            vm.schoolsInMapBounds = [];
+            NgMap.getMap('map').then(function(map)
+            {
+                vm.map = map;
+                var bounds = vm.map.getBounds()
+                var bounds = bounds.toString();
+                var string = bounds.split(' ');
+                var latS = string[0].split('((');
+                var latS = latS[1];
+                var latN = string[2].split('(');
+                var latN = latN[1]
+                var lastLatN = latN.split(',');
+                var lastLatN = lastLatN[0];
+                var lonW = string[1].split('),');
+                var lonW = lonW[0];
+                var lonE = string[3].split('))');
+                var lonE = lonE[0];
+                var polygon = 'POLYGON(('+lonW + ' ' + latN + ' ' + lonW + ' ' + latS + ' ' +  lonE + ' ' + latS + ' ' +  lonE + ' ' + latN + ' ' +   lonW + ' ' + lastLatN + '))';
+                var call = {polygon:polygon};
+
+                vm.emptySchools();
+                vm.schoolsService.getMapBoundsSchools(call, vm.onSuccessGetMapSchools, vm.onError);
+            });
+        }
